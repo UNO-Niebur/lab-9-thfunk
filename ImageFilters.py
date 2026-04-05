@@ -12,10 +12,17 @@ def swapGreenBlue(img):
     pixels = img.load()
     width, height = img.size
 
-    for x in range(width):
-        for y in range(height):
-            red, green, blue, alpha = pixels[x, y]
-            pixels[x, y] = (red, blue, green, alpha)
+    if len(pixels[0,0]) == 3: #no alpha channel
+        for x in range(width):
+            for y in range(height):
+                red, green, blue = pixels[x, y]
+                pixels[x, y] = (red, blue, green)
+    
+    if len(pixels[0,0]) == 4: #has alpha channel
+        for x in range(width):
+            for y in range(height):
+                red, green, blue, alpha = pixels[x, y]
+                pixels[x, y] = (red, blue, green, alpha)
 
     img.save("swapGB.png")
 
@@ -26,12 +33,17 @@ def darken(img, amount):
     pixels = img.load()
     width, height = img.size
 
-    # TODO: Loop through every pixel and reduce RGB values by amount
-    # Make sure values do not go below 0
-    for x in range(width):
-        for y in range(height):
-            red, green, blue, alpha = pixels[x, y]
-            pixels[x, y] = (max(0, red - amount), max(0, green - amount), max(0, blue - amount), alpha)
+    if len(pixels[0,0]) == 3: #no alpha channel
+        for x in range(width):
+            for y in range(height):
+                red, green, blue = pixels[x, y]
+                pixels[x, y] = (max(0, red - amount), max(0, green - amount), max(0, blue - amount))
+
+    if len(pixels[0,0]) == 4: #has alpha channel
+        for x in range(width):
+            for y in range(height):
+                red, green, blue, alpha = pixels[x, y]
+                pixels[x, y] = (max(0, red - amount), max(0, green - amount), max(0, blue - amount), alpha)
 
     img.save("darkImg.png")
 
@@ -42,19 +54,27 @@ def bwFilter(img):
     pixels = img.load()
     width, height = img.size
 
-    for x in range(width):
-        for y in range(height):
-            red, green, blue, alpha = pixels[x, y]
-            avg = (red + green + blue) // 3
-            pixels[x, y] = (avg, avg, avg, alpha)
+    if len(pixels[0,0]) == 3: #no alpha channel
+        for x in range(width):
+            for y in range(height):
+                red, green, blue = pixels[x, y]
+                avg = (red + green + blue) // 3
+                pixels[x, y] = (avg, avg, avg)
+
+    if len(pixels[0,0]) == 4: #has alpha channel
+        for x in range(width):
+            for y in range(height):
+                red, green, blue, alpha = pixels[x, y]
+                avg = (red + green + blue) // 3
+                pixels[x, y] = (avg, avg, avg, alpha)
 
     img.save("bwImg.png")
 
 
 def main():
     # Open the image file
-    myImg = Image.open("durango.png")
-    #myImg = Image.open("pki.png")
+    #myImg = Image.open("durango.png")
+    myImg = Image.open("pki.png")
 
     # Example (already completed)
     #bwFilter(myImg)
